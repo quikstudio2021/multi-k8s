@@ -6,5 +6,5 @@ ssh -o StrictHostkeyChecking=no travis@$DIGITAL_OCEAN_IP_ADDRESS << ENDSSH
     git pull
     docker-compose down
     source .env
-    docker-compose up
+    docker-compose up -d
 ENDSSH
