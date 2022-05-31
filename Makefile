@@ -12,3 +12,4 @@ release:
 	docker push ymtangab/multi-nginx:latest
 	docker push ymtangab/multi-server:latest
 	docker push ymtangab/multi-worker:latest
+	./deploy.sh

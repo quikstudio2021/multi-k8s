@@ -3,51 +3,38 @@ services:
   postgres:
     image: "postgres:latest"
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   redis:
     image: "redis:latest"
   api:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./server
-    volumes:
-      # Dont overwrite the below folder in container
-      - /app/node_modules
-      - ./server:/app
+    image: "ymtangab/complex-server:latest"
     environment:
-      REDIS_HOST: "redis"
-      REDIST_PORT: 6379
-      PGUSER: postgres
-      PGHOST: postgres
-      PGDATABASE: postgres
-      PGPASSWORD: password
-      PGPORT: 5432
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      PGUSER: ${PGUSER}
+      PGHOST: ${PGHOST}
+      PGDATABASE: ${PGDATABASE}
+      PGPASSWORD: ${PGPASSWORD}
+      PGPORT: ${PGPORT}
+    depends_on:
+      - redis
+      - postgres
   client:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: "ymtangab/complex-client:latest"
     environment:
       - WDS_SOCKET_PORT=0
   worker:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./worker
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+    image: "ymtangab/complex-worker:latest"
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - redis
   nginx:
     restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
+    image: "ymtangab/complex-nginx:latest"
     ports:
-      - "8081:80"
+      - "3080:80"
     depends_on:
       - api
       - client
