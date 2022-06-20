@@ -18,4 +18,4 @@ before_install:
 
 script:
   - docker run -e CI=true ymtangab/react-test npm test
-  - echo "Finished"
+  - echo "Test Completed"
